@@ -1,0 +1,7 @@
+.movie-pagination {
+  border: 1px solid transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0 30px;
+}
