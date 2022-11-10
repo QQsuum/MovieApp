@@ -14,14 +14,8 @@ export default class Movie extends Component {
   key = 100
 
   createGenresNames = (genresId, genresData) => {
-    let result = []
-    genresId.forEach((el) => {
-      genresData.forEach((item) => {
-        if (el === item.id) {
-          result.push(item.name)
-        }
-      })
-    })
+    const resultIds = genresData.filter((el, i) => genresId.indexOf(el.id) > -1)
+    const result = resultIds.map((el) => el.name)
     this.setState({ genres: result })
     return result
   }
@@ -48,19 +42,18 @@ export default class Movie extends Component {
   }
 
   createVoteClassName(vote) {
-    let result
-    if (vote == 0) {
-      result = 'movie__vote'
-    } else if (vote <= 3) {
-      result = 'movie__vote movie__vote--red'
-    } else if (vote <= 5) {
-      result = 'movie__vote movie__vote--orange'
-    } else if (vote < 7) {
-      result = 'movie__vote movie__vote--yellow'
-    } else if (vote >= 7) {
-      result = 'movie__vote movie__vote--green'
+    switch (true) {
+      case vote == 0:
+        return 'movie__vote'
+      case vote <= 3:
+        return 'movie__vote movie__vote--red'
+      case vote <= 5:
+        return 'movie__vote movie__vote--orange'
+      case vote < 7:
+        return 'movie__vote movie__vote--yellow'
+      case vote >= 7:
+        return 'movie__vote movie__vote--green'
     }
-    return result
   }
 
   onMovieRate = (id, value) => {
@@ -68,16 +61,14 @@ export default class Movie extends Component {
   }
 
   createRatedValue() {
-    let result = 0
     let { ratedMovies } = this.state
     ratedMovies = JSON.parse(ratedMovies)
 
     for (let i in ratedMovies) {
       if (ratedMovies[i].movieId == this.props.id) {
-        result = ratedMovies[i].rate
+        return ratedMovies[i].rate
       }
     }
-    return result
   }
 
   onShowMore = () => {
@@ -99,11 +90,13 @@ export default class Movie extends Component {
 
     const date = this.createReleaseDate(release_date)
 
-    const overviewStyle = this.state.overviewHeight ? { maxHeight: `${this.state.overviewHeight}px` } : null
+    const overviewStyle = this.state.overviewHeight
+      ? { maxHeight: `${this.state.overviewHeight}px` }
+      : null
     const movieItemStyle = this.state.movieItemHeight
       ? { height: `${this.state.movieItemHeight}px` }
       : { minHeight: `280px` }
-      const overviewFade = overviewStyle  ? <div className="movie__overview-fade"></div> : null
+    const overviewFade = overviewStyle ? <div className="movie__overview-fade"></div> : null
 
     const voteClassName = this.createVoteClassName(vote_average)
 
